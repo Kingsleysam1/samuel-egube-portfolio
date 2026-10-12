@@ -966,15 +966,17 @@ function placeStory() {
     }
     return;
   }
-  if (ring && rt) [ring, rt].forEach(el => { el.style.width = el.style.top = el.style.translate = ''; ring.style.borderWidth = ''; });
+  /* Use viewport centre as the stable anchor — oCx (O-letter centre) can be 0 on first
+     call before fonts are laid out, which would misplace the ring. hr.width/2 is always
+     reliable, and the centred 'O' sits within a pixel or two of it anyway. */
+  const cx = hr.width / 2;
   const headTop = (or.top - hr.top) + or.height * .16;
   const H = Math.max(320, hr.height - headTop + hr.height * .01);
-  const oCx = or.left - hr.left + or.width / 2;
   img.style.height = Math.round(H) + 'px';
   img.style.translate = '0 0';
-  img.style.left = Math.round(oCx - H * ratio * .577) + 'px';
-  /* Align ring and rotating text to the same horizontal centre as the portrait */
-  if (ring && rt) [ring, rt].forEach(el => { el.style.left = Math.round(oCx) + 'px'; el.style.translate = '-50% 0'; });
+  img.style.left = Math.round(cx - H * ratio * .577) + 'px';
+  /* Pin ring and rotating-text circle to the same centre as the portrait */
+  if (ring && rt) [ring, rt].forEach(el => { el.style.left = Math.round(cx) + 'px'; el.style.top = ''; el.style.width = ''; el.style.translate = '-50% 0'; ring.style.borderWidth = ''; });
 }
 function initStoryHero() {
   const h = $('#shero'); if (!h) return;
